@@ -12,7 +12,6 @@ CMakeLists.txt.user
 CMakeLists.txt.user.*
 
 # Build artifacts
-build-*/
 *.o
 *.obj
 *.so
