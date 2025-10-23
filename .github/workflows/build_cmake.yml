@@ -39,7 +39,7 @@ jobs:
             build_type: "Release", cc: "gcc", cxx: "g++"
           }
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v5
       - uses: ilammy/msvc-dev-cmd@v1
 
       - name: Download Ninja and CMake
@@ -95,7 +95,7 @@ jobs:
 
       - name: Ccache cache files
         id: cache
-        uses: actions/cache@v1.1.0
+        uses: actions/cache@v4
         with:
           path: .ccache
           key: ${{ matrix.config.name }}-ccache-${{ steps.ccache_cache_timestamp.outputs.timestamp }}
@@ -104,15 +104,17 @@ jobs:
 
       - name: Install Qt MinGW
         if: "contains(matrix.config.name, 'MinGW')"
-        uses: jurplel/install-qt-action@v2
+        uses: jurplel/install-qt-action@v4
         with:
           cached: ${{ steps.cache.outputs.cache-hit }}
           arch: 'win64_mingw81'
+          version: '5.15.*'
 
       - name: Install Qt
         if: "!contains(matrix.config.name, 'MinGW')"
-        uses: jurplel/install-qt-action@v2
+        uses: jurplel/install-qt-action@v4
         with:
+          version: '5.15.*'
           cached: ${{ steps.cache.outputs.cache-hit }}
 
       - name: Configure
