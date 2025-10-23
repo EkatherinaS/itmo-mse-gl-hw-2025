@@ -1,3 +1,44 @@
 build
 cmake-build-*
 .idea
+
+# Qt Creator specific files
+*.user
+*.pro.user
+*.pro.user.*
+*.qmlproject.user
+*.qmlproject.user.*
+CMakeLists.txt.user
+CMakeLists.txt.user.*
+
+# Build artifacts
+build-*/
+*.o
+*.obj
+*.so
+*.dll
+*.dylib
+*.a
+*.lib
+*.exe
+*.ilk
+*.pdb
+moc_*.cpp
+qrc_*.cpp
+ui_*.h
+
+# Temporary files
+*~
+*.bak
+*.swp
+*.tmp
+temp/
+
+# Log files
+*.log
+
+# macOS specific files
+.DS_Store
+
+# Windows specific files
+Thumbs.db
