@@ -101,7 +101,7 @@ void Window::onInit()
 	program_->setAttributeBuffer(2, GL_FLOAT, static_cast<int>(5 * sizeof(GLfloat)), 2,
 								 static_cast<int>(7 * sizeof(GLfloat)));
 
-	mvpUniform_ = program_->uniformLocation("mvp");
+    mvpUniform_ = program_->uniformLocation("mvp");
 
 	// Release all
 	program_->release();
@@ -128,7 +128,8 @@ void Window::onRender()
 
 	// Calculate MVP matrix
 	model_.setToIdentity();
-	model_.translate(0, 0, -2);
+    model_.translate(0, 0, -2);
+    model_.rotate(frameCount_, {0, 1, 0});
 	view_.setToIdentity();
 	const auto mvp = projection_ * view_ * model_;
 

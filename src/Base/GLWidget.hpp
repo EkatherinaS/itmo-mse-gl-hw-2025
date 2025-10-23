@@ -41,7 +41,7 @@ public:
 private:// QOpenGLWidget
 	void initializeGL() override;
 	void resizeGL(int width, int height) override;
-	void paintGL() override;
+    void paintGL() override;
 };
 
 }// namespace fgl

@@ -5,11 +5,12 @@ set(BASE_SRCS
 
 add_library(Base ${BASE_SRCS})
 
-find_package(Qt5 COMPONENTS Widgets REQUIRED)
+find_package(Qt6 COMPONENTS Widgets OpenGLWidgets REQUIRED)
 
 target_link_libraries(Base
         PRIVATE
-        Qt5::Widgets
+        Qt6::Widgets
+        Qt6::OpenGLWidgets
         )
 
 add_library(FGL::Base ALIAS Base)

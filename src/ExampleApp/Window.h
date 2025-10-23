@@ -25,30 +25,30 @@ public: // fgl::GLWidget
 	void onResize(size_t width, size_t height) override;
 
 private:
-	class PerfomanceMetricsGuard final
-	{
-	public:
-		explicit PerfomanceMetricsGuard(std::function<void()> callback);
-		~PerfomanceMetricsGuard();
+    class PerfomanceMetricsGuard final
+    {
+    public:
+        explicit PerfomanceMetricsGuard(std::function<void()> callback);
+        ~PerfomanceMetricsGuard();
 
-		PerfomanceMetricsGuard(const PerfomanceMetricsGuard &) = delete;
-		PerfomanceMetricsGuard(PerfomanceMetricsGuard &&) = delete;
+        PerfomanceMetricsGuard(const PerfomanceMetricsGuard &) = delete;
+        PerfomanceMetricsGuard(PerfomanceMetricsGuard &&) = delete;
 
-		PerfomanceMetricsGuard & operator=(const PerfomanceMetricsGuard &) = delete;
-		PerfomanceMetricsGuard & operator=(PerfomanceMetricsGuard &&) = delete;
+        PerfomanceMetricsGuard & operator=(const PerfomanceMetricsGuard &) = delete;
+        PerfomanceMetricsGuard & operator=(PerfomanceMetricsGuard &&) = delete;
 
-	private:
-		std::function<void()> callback_;
-	};
+    private:
+        std::function<void()> callback_;
+    };
 
 private:
-	[[nodiscard]] PerfomanceMetricsGuard captureMetrics();
+    [[nodiscard]] PerfomanceMetricsGuard captureMetrics();
 
 signals:
 	void updateUI();
 
 private:
-	GLint mvpUniform_ = -1;
+    GLint mvpUniform_ = -1;
 
 	QOpenGLBuffer vbo_{QOpenGLBuffer::Type::VertexBuffer};
 	QOpenGLBuffer ibo_{QOpenGLBuffer::Type::IndexBuffer};
@@ -59,14 +59,14 @@ private:
 	QMatrix4x4 projection_;
 
 	std::unique_ptr<QOpenGLTexture> texture_;
-	std::unique_ptr<QOpenGLShaderProgram> program_;
+    std::unique_ptr<QOpenGLShaderProgram> program_;
 
-	QElapsedTimer timer_;
-	size_t frameCount_ = 0;
+    QElapsedTimer timer_;
+    size_t frameCount_ = 0;
 
-	struct {
-		size_t fps = 0;
-	} ui_;
+    struct {
+        size_t fps = 0;
+    } ui_;
 
-	bool animated_ = true;
+    bool animated_ = true;
 };

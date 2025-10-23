@@ -10,13 +10,14 @@ set(SRCS
     resources.qrc
 )
 
-find_package(Qt5 COMPONENTS Widgets REQUIRED)
+find_package(Qt6 COMPONENTS Widgets OpenGLWidgets REQUIRED)
 
 add_executable(demo-app ${SRCS})
 
 target_link_libraries(demo-app
     PRIVATE
-        Qt5::Widgets
+        Qt6::Widgets
+        Qt6::OpenGLWidgets
         FGL::Base
         thirdparty::tinygltf
 )

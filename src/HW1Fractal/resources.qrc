@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Shaders/fractal.fs</file>
+        <file>Shaders/fractal.vs</file>
+    </qresource>
+</RCC>
