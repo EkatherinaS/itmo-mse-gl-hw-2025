@@ -140,7 +140,7 @@ void Window::onInit()
     _vbo.release();
 
     // Default values
-    _zoom = 1.1f;
+    _zoom = 1.0f;
     _exponent = 0.0f;
     _center = QVector2D(0, 0);
 
@@ -222,15 +222,19 @@ void Window::onResize(const size_t width, const size_t height)
 
 void Window::wheelEvent(QWheelEvent *e)
 {
+    const qreal dpr = devicePixelRatio();
+    const float aspect = _resolution.y() / _resolution.x();
+
     QPoint numDegrees = e->angleDelta();
     _exponent += float(numDegrees.y()) / 360.0;
-    _zoom = std::pow(_zoomSpeed, _exponent);
+    float zoomNew = std::pow(_zoomSpeed, _exponent);
 
-    QVector2D mouse = QVector2D(e->position());
-    QVector2D normMouse = (2.0 * (mouse - _resolution * 0.5) / _resolution) / _zoom;
+    QVector2D mouse = QVector2D(e->position() * dpr);
+    QVector2D normMouse = (2.0 * (mouse - _resolution * 0.5) / _resolution);
+    QVector2D fragMouse = QVector2D(normMouse.x(), -normMouse.y() * aspect);
 
-    const float aspect = _resolution.y() / _resolution.x();
-    _center += QVector2D(normMouse.x(), -normMouse.y() * aspect) * 0.1f;
+    _center += fragMouse / _zoom - fragMouse / zoomNew;
+    _zoom = zoomNew;
 
     update();
     e->accept();
@@ -246,9 +250,10 @@ void Window::mouseMoveEvent(QMouseEvent *e)
 {
     _mouseOldPos = _mouseNewPos;
     _mouseNewPos = QVector2D(e->position());
-
     QVector2D diff = _mouseNewPos - _mouseOldPos;
-    QVector2D normDiff = 2.0 * diff / _resolution / _zoom;
+
+    const qreal dpr = devicePixelRatio();
+    QVector2D normDiff = 2.0 * diff * dpr / _resolution / _zoom;
 
     const float aspect = _resolution.y() / _resolution.x();
     _center -= QVector2D(normDiff.x(), -normDiff.y() * aspect);
