@@ -27,44 +27,44 @@ public:
     void wheelEvent(QWheelEvent *e) override;
 
 private:
-    std::unique_ptr<QOpenGLShaderProgram> _program;
+    std::unique_ptr<QOpenGLShaderProgram> program_;
 
-    QOpenGLVertexArrayObject _vao;
-    QOpenGLBuffer _vbo{QOpenGLBuffer::Type::VertexBuffer};
-    QOpenGLBuffer _ibo{QOpenGLBuffer::Type::IndexBuffer};
+    QOpenGLVertexArrayObject vao_;
+    QOpenGLBuffer vbo_{QOpenGLBuffer::Type::VertexBuffer};
+    QOpenGLBuffer ibo_{QOpenGLBuffer::Type::IndexBuffer};
 
-    QMatrix4x4 _model;
-    QMatrix4x4 _view;
-    QMatrix4x4 _projection;
+    QMatrix4x4 model_;
+    QMatrix4x4 view_;
+    QMatrix4x4 projection_;
 
-    QVector2D _mouseNewPos;
-    QVector2D _mouseOldPos;
+    QVector2D mouseNewPos_;
+    QVector2D mouseOldPos_;
 
-    QVector2D _center;
-    QVector2D _resolution;
-    float _zoom;
-    float _exponent;
+    QVector2D center_;
+    QVector2D resolution_;
+    float zoom_;
+    float exponent_;
 
-    QVector3D _color;
-    float _brightness;
-    float _maxIteration;
-    float _treshold;
-    float _zoomSpeed;
+    QVector3D color_;
+    float brightness_;
+    float maxIteration_;
+    float treshold_;
+    float zoomSpeed_;
 
-    GLint _mvpUniform = -1;
-    GLint _centerUniform = -1;
-    GLint _zoomUniform = -1;
+    GLint mvpUniform_ = -1;
+    GLint centerUniform_ = -1;
+    GLint zoomUniform_ = -1;
 
-    GLint _colorUniform = -1;
-    GLint _brightnessUniform = -1;
-    GLint _maxIterationUniform = -1;
-    GLint _tresholdUniform = -1;
-    GLint _zoomSpeedUniform = -1;
+    GLint colorUniform_ = -1;
+    GLint brightnessUniform_ = -1;
+    GLint maxIterationUniform_ = -1;
+    GLint tresholdUniform_ = -1;
+    GLint zoomSpeedUniform_ = -1;
 
 //for fps
 
-    QElapsedTimer _timer;
-    size_t _frameCount = 0;
+    QElapsedTimer timer_;
+    size_t frameCount_ = 0;
 
     struct {
         size_t fps = 0;

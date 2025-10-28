@@ -37,7 +37,7 @@ Window::Window() noexcept
     fps->setStyleSheet("QLabel { color : white; }");
     layout->addWidget(fps, 1);
 
-    _timer.start();
+    timer_.start();
 
     connect(this, &Window::updateUI, this, [this, fps, formatFPS] {
         fps->setText(formatFPS(ui_.fps));
@@ -51,23 +51,23 @@ Window::Window() noexcept
     layout->addWidget(sliders);
 
     connect(sliders, &SliderGroup::colorChanged, this, [this](const QColor &c) {
-        _color = QVector3D(c.redF(), c.greenF(), c.blueF());
+        color_ = QVector3D(c.redF(), c.greenF(), c.blueF());
         update();
     });
     connect(sliders, &SliderGroup::brightnessChanged, this, [this](float v) {
-        _brightness = v;
+        brightness_ = v;
         update();
     });
     connect(sliders, &SliderGroup::tresholdChanged, this, [this](float v) {
-        _treshold = v;
+        treshold_ = v;
         update();
     });
     connect(sliders, &SliderGroup::maxIterationChanged, this, [this](float v) {
-        _maxIteration = v;
+        maxIteration_ = v;
         update();
     });
     connect(sliders, &SliderGroup::zoomSpeedChanged, this, [this](float v) {
-        _zoomSpeed = v;
+        zoomSpeed_ = v;
         update();
     });
 
@@ -79,76 +79,76 @@ Window::~Window()
     {
         ContextGuard guard = bindContext();
         //reset all unique ptrs
-        _program.reset();
+        program_.reset();
     }
 }
 
 void Window::onInit()
 {
     // Configure shaders
-    _program = std::make_unique<QOpenGLShaderProgram>(this);
-    _program->addCacheableShaderFromSourceFile(QOpenGLShader::Vertex, ":/Shaders/fractal.vs");
-    _program->addCacheableShaderFromSourceFile(QOpenGLShader::Fragment, ":/Shaders/fractal.fs");
-    bool shadersLinkSuccessful = _program->link();
+    program_ = std::make_unique<QOpenGLShaderProgram>(this);
+    program_->addCacheableShaderFromSourceFile(QOpenGLShader::Vertex, ":/Shaders/fractal.vs");
+    program_->addCacheableShaderFromSourceFile(QOpenGLShader::Fragment, ":/Shaders/fractal.fs");
+    bool shadersLinkSuccessful = program_->link();
     if (!shadersLinkSuccessful) {
         std::cout << "shaders link failed: "
-                  << _program->log().toStdString()
+                  << program_->log().toStdString()
                   << std::endl;
     } else {
         std::cout << "shaders link successful" << std::endl;
     }
 
     // Create VAO object
-    _vao.create();
-    _vao.bind();
+    vao_.create();
+    vao_.bind();
 
     // Create VBO
-    _vbo.create();
-    _vbo.bind();
-    _vbo.setUsagePattern(QOpenGLBuffer::StaticDraw);
-    _vbo.allocate(vertices.data(), static_cast<int>(vertices.size() * sizeof(GLfloat)));
+    vbo_.create();
+    vbo_.bind();
+    vbo_.setUsagePattern(QOpenGLBuffer::StaticDraw);
+    vbo_.allocate(vertices.data(), static_cast<int>(vertices.size() * sizeof(GLfloat)));
 
     // Create IBO
-    _ibo.create();
-    _ibo.bind();
-    _ibo.setUsagePattern(QOpenGLBuffer::StaticDraw);
-    _ibo.allocate(indices.data(), static_cast<int>(indices.size() * sizeof(GLuint)));
+    ibo_.create();
+    ibo_.bind();
+    ibo_.setUsagePattern(QOpenGLBuffer::StaticDraw);
+    ibo_.allocate(indices.data(), static_cast<int>(indices.size() * sizeof(GLuint)));
 
     // Bind attributes
 
     //connection with vertex shader
-    _program->bind();
+    program_->bind();
 
     //layout(location=0) in vec2 pos;
-    _program->enableAttributeArray(0);
-    _program->setAttributeBuffer(0, GL_FLOAT, 0, 2, static_cast<int>(2*sizeof(GLfloat)));
+    program_->enableAttributeArray(0);
+    program_->setAttributeBuffer(0, GL_FLOAT, 0, 2, static_cast<int>(2*sizeof(GLfloat)));
 
     //set uniforms
-    _mvpUniform = _program->uniformLocation("mvp");
-    _centerUniform = _program->uniformLocation("center");
-    _zoomUniform = _program->uniformLocation("zoom");
+    mvpUniform_ = program_->uniformLocation("mvp");
+    centerUniform_ = program_->uniformLocation("center");
+    zoomUniform_ = program_->uniformLocation("zoom");
 
-    _colorUniform = _program->uniformLocation("color");
-    _maxIterationUniform = _program->uniformLocation("maxIteration");
-    _brightnessUniform = _program->uniformLocation("brightness");
-    _tresholdUniform = _program->uniformLocation("treshold");
+    colorUniform_ = program_->uniformLocation("color");
+    maxIterationUniform_ = program_->uniformLocation("maxIteration");
+    brightnessUniform_ = program_->uniformLocation("brightness");
+    tresholdUniform_ = program_->uniformLocation("treshold");
 
     // Release all
-    _program->release();
-    _vao.release();
-    _ibo.release();
-    _vbo.release();
+    program_->release();
+    vao_.release();
+    ibo_.release();
+    vbo_.release();
 
     // Default values
-    _zoom = 1.0f;
-    _exponent = 0.0f;
-    _center = QVector2D(0, 0);
+    zoom_ = 1.0f;
+    exponent_ = 0.0f;
+    center_ = QVector2D(0, 0);
 
-    _color = QVector3D(1.0f, 0.666666f, 0.0f);
-    _brightness = 10.0f;
-    _maxIteration = 1000;
-    _treshold = 4.0f;
-    _zoomSpeed = 1.1f;
+    color_ = QVector3D(1.0f, 0.666666f, 0.0f);
+    brightness_ = 10.0f;
+    maxIteration_ = 1000;
+    treshold_ = 4.0f;
+    zoomSpeed_ = 1.1f;
 
     // Еnable face culling
     glEnable(GL_CULL_FACE);
@@ -165,42 +165,42 @@ void Window::onRender()
     glClear(GL_COLOR_BUFFER_BIT);
 
     // Calculate MVP matrix
-    _view.setToIdentity();
-    _model.setToIdentity();
-    _model.translate(0, 0, -1);
+    view_.setToIdentity();
+    model_.setToIdentity();
+    model_.translate(0, 0, -1);
 
-    const QMatrix4x4 mvp = _projection * _view * _model;
+    const QMatrix4x4 mvp = projection_ * view_ * model_;
 
     // Bind VAO and shader program
-    _program->bind();
+    program_->bind();
 
     // Update uniform value
-    _program->setUniformValue(_mvpUniform, mvp);
-    _program->setUniformValue(_zoomUniform, _zoom);
-    _program->setUniformValue(_centerUniform, _center);
+    program_->setUniformValue(mvpUniform_, mvp);
+    program_->setUniformValue(zoomUniform_, zoom_);
+    program_->setUniformValue(centerUniform_, center_);
 
-    _program->setUniformValue(_colorUniform, _color);
-    _program->setUniformValue(_maxIterationUniform, _maxIteration);
-    _program->setUniformValue(_brightnessUniform, _brightness);
-    _program->setUniformValue(_tresholdUniform, _treshold);
+    program_->setUniformValue(colorUniform_, color_);
+    program_->setUniformValue(maxIterationUniform_, maxIteration_);
+    program_->setUniformValue(brightnessUniform_, brightness_);
+    program_->setUniformValue(tresholdUniform_, treshold_);
 
-    _vao.bind();
+    vao_.bind();
 
     // Draw
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
     // Release VAO and shader program
-    _vao.release();
-    _program->release();
+    vao_.release();
+    program_->release();
 
-    ++_frameCount;
+    ++frameCount_;
 
     update();
 }
 
 void Window::onResize(const size_t width, const size_t height)
 {
-    _resolution = QVector2D(float(width), float(height));
+    resolution_ = QVector2D(float(width), float(height));
 
     // Configure viewport
     glViewport(0, 0, static_cast<GLint>(width), static_cast<GLint>(height));
@@ -214,8 +214,8 @@ void Window::onResize(const size_t width, const size_t height)
     const float top = -1.0f * aspect;
     const float bottom = 1.0f * aspect;
 
-    _projection.setToIdentity();
-    _projection.ortho(left, right, top, bottom, nearPlane, farPlane);
+    projection_.setToIdentity();
+    projection_.ortho(left, right, top, bottom, nearPlane, farPlane);
 
     update();
 }
@@ -223,18 +223,20 @@ void Window::onResize(const size_t width, const size_t height)
 void Window::wheelEvent(QWheelEvent *e)
 {
     const qreal dpr = devicePixelRatio();
-    const float aspect = _resolution.y() / _resolution.x();
+    const float aspect = resolution_.y() / resolution_.x();
 
     QPoint numDegrees = e->angleDelta();
-    _exponent += float(numDegrees.y()) / 360.0;
-    float zoomNew = std::pow(_zoomSpeed, _exponent);
+    exponent_ += float(numDegrees.y()) / 360.0;
+    float zoomNew = std::pow(zoomSpeed_, exponent_);
 
     QVector2D mouse = QVector2D(e->position() * dpr);
-    QVector2D normMouse = (2.0 * (mouse - _resolution * 0.5) / _resolution);
+    QVector2D normMouse = (2.0 * (mouse - resolution_ * 0.5) / resolution_);
     QVector2D fragMouse = QVector2D(normMouse.x(), -normMouse.y() * aspect);
 
-    _center += fragMouse / _zoom - fragMouse / zoomNew;
-    _zoom = zoomNew;
+    if (zoomNew > 0.0) {
+        center_ += fragMouse / zoom_ - fragMouse / zoomNew;
+        zoom_ = zoomNew;
+    }
 
     update();
     e->accept();
@@ -242,21 +244,21 @@ void Window::wheelEvent(QWheelEvent *e)
 
 void Window::mousePressEvent(QMouseEvent *e)
 {
-    _mouseNewPos = QVector2D(e->position());
+    mouseNewPos_ = QVector2D(e->position());
     e->accept();
 }
 
 void Window::mouseMoveEvent(QMouseEvent *e)
 {
-    _mouseOldPos = _mouseNewPos;
-    _mouseNewPos = QVector2D(e->position());
-    QVector2D diff = _mouseNewPos - _mouseOldPos;
+    mouseOldPos_ = mouseNewPos_;
+    mouseNewPos_ = QVector2D(e->position());
+    QVector2D diff = mouseNewPos_ - mouseOldPos_;
 
     const qreal dpr = devicePixelRatio();
-    QVector2D normDiff = 2.0 * diff * dpr / _resolution / _zoom;
+    QVector2D normDiff = 2.0 * diff * dpr / resolution_ / zoom_;
 
-    const float aspect = _resolution.y() / _resolution.x();
-    _center -= QVector2D(normDiff.x(), -normDiff.y() * aspect);
+    const float aspect = resolution_.y() / resolution_.x();
+    center_ -= QVector2D(normDiff.x(), -normDiff.y() * aspect);
 
     update();
     e->accept();
@@ -279,11 +281,11 @@ auto Window::captureMetrics() -> PerfomanceMetricsGuard
 {
     return PerfomanceMetricsGuard{
         [&] {
-            if (_timer.elapsed() >= 1000)
+            if (timer_.elapsed() >= 1000)
             {
-                const auto elapsedSeconds = static_cast<float>(_timer.restart()) / 1000.0f;
-                ui_.fps = static_cast<size_t>(std::round(_frameCount / elapsedSeconds));
-                _frameCount = 0;
+                const auto elapsedSeconds = static_cast<float>(timer_.restart()) / 1000.0f;
+                ui_.fps = static_cast<size_t>(std::round(frameCount_ / elapsedSeconds));
+                frameCount_ = 0;
                 emit updateUI();
             }
         }
