@@ -27,4 +27,5 @@ set(CMAKE_AUTOUIC ON)
 
 add_subdirectory(src/Base)
 add_subdirectory(src/App)
+add_subdirectory(src/AiGenerated)
 add_subdirectory(src/HW1Fractal)
