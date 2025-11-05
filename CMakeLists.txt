@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
 
-project(itmo-mse-gl-hw-2025 VERSION 1.0.0 LANGUAGES CXX)
+project(mse-gl-hw-template VERSION 1.0.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -27,4 +27,5 @@ set(CMAKE_AUTOUIC ON)
 
 add_subdirectory(src/Base)
 add_subdirectory(src/App)
+add_subdirectory(src/AiGenerated)
 add_subdirectory(src/HW1Fractal)
