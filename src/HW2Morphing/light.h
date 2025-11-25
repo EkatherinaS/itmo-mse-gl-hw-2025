@@ -13,7 +13,7 @@ public:
     Light() = default;
     ~Light() = default;
 
-    void initialize(QOpenGLShaderProgram * program, QOpenGLContext * context, Camera * camera);
+    void initialize(QOpenGLShaderProgram * program);
     void setAmbientLight(float intensity, QVector3D color);
     bool addSpotLight(float intensity, QVector3D color,
                       QVector3D position, QVector3D target,
@@ -72,8 +72,6 @@ private:
     };
 
     QOpenGLShaderProgram * program_;
-    QOpenGLContext * context_;
-    Camera * camera_;
     AmbientLight ambient_;
     std::vector<SpotLight> spotlight_ = {};
 

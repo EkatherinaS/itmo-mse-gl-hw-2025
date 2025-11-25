@@ -132,7 +132,7 @@ void Window::updateLights() {
                          sl2Position_, sl2Target_,
                          sl2Constant_, sl2Linear_, sl2Quadratic_, sl2Specular_,
                          sl2Cutoff_, sl2OuterCutoff);
-    light_->initialize(program_.get(), context_.get(), camera_.get());
+    light_->initialize(program_.get());
     update();
 }
 
@@ -167,7 +167,7 @@ void Window::onInit()
     camera_->setPosition(QVector3D(0.0f, 0.0f, 2.0f));
 
     model_->initialize(program_.get(), context_.get(), camera_.get());
-    light_->initialize(program_.get(), context_.get(), camera_.get());
+    light_->initialize(program_.get());
 
     glEnable(GL_CULL_FACE);
     glEnable(GL_DEPTH_TEST);

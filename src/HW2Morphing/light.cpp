@@ -6,10 +6,8 @@ inline float degreesToRadians(float degrees)
     return degrees * static_cast<float>(M_PI) / 180.0f;
 }
 
-void Light::initialize(QOpenGLShaderProgram * program, QOpenGLContext * context, Camera * camera) {
+void Light::initialize(QOpenGLShaderProgram * program) {
     program_ = program;
-    context_ = context;
-    camera_ = camera;
 }
 
 void Light::setAmbientLight(float intensity, QVector3D color) {
