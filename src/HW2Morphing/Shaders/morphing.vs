@@ -14,21 +14,11 @@ out vec3 fragPos;
 out vec3 fragNormal;
 out vec2 fragTexCoord;
 
+
 vec3 getMorphed(vec3 pos, float morphingScale, float radius) {
-    float x = pos.x;
-    float y = pos.y;
-    float z = pos.z;
-
     vec3 dir = normalize(pos);
-
-    float curR = sqrt(x*x + y*y + z*z);
-    float dist = radius - curR;
-
-    return vec3(
-        x + dir.x * (dist * morphingScale),
-        y + dir.y * (dist * morphingScale),
-        z + dir.z * (dist * morphingScale)
-    );
+    float dist = radius - length(pos);
+    return pos + dir * dist * morphingScale;
 }
 
 void main() {
