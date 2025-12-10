@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Shaders/morphing.fs</file>
+        <file>Shaders/morphing.vs</file>
+        <file>Models/cube.glb</file>
+    </qresource>
+</RCC>

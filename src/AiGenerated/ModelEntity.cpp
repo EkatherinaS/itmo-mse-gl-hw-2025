@@ -24,7 +24,7 @@ bool ModelEntity::loadFromGLTF(const QString & filePath)
 	}
 
 	QByteArray modelData = modelFile.readAll();
-	modelFile.close();
+    modelFile.close();
 
 	if (modelData.isEmpty())
 	{

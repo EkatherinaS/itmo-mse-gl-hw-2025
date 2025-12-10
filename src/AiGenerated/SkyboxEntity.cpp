@@ -60,7 +60,7 @@ void SkyboxEntity::setShaderProgram(std::shared_ptr<QOpenGLShaderProgram> progra
 		program->bind();
 		viewUniform_ = program->uniformLocation("view");
 		projectionUniform_ = program->uniformLocation("projection");
-		textureUniform_ = program->uniformLocation("skybox");
+        textureUniform_ = program->uniformLocation("skybox");
 		program->release();
 	}
 }
