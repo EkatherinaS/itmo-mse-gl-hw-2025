@@ -1,0 +1,14 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Models/cube.glb</file>
+        <file>Shaders/ssao.fs</file>
+        <file>Shaders/ssao.vs</file>
+        <file>Models/portal_gun_with_download.glb</file>
+        <file>Shaders/geometry.fs</file>
+        <file>Shaders/geometry.vs</file>
+        <file>Shaders/output.fs</file>
+        <file>Shaders/output.vs</file>
+        <file>Shaders/quad.fs</file>
+        <file>Shaders/quad.vs</file>
+    </qresource>
+</RCC>
