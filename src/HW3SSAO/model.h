@@ -31,14 +31,14 @@ class Model
 public:
     Model() = default;
     ~Model();
-    void initialize(QOpenGLShaderProgram * program, QOpenGLContext * context, Camera * camera);
+    void initialize(QOpenGLContext * context, Camera * camera);
+    void addQOpenGLShaderProgram(QOpenGLShaderProgram * program);
     void loadGLTF(const QString &  path);
     void setVertexShader(const QString & path);
     void setFragmentShader(const QString &  path);
-    void render();
+    void render(QOpenGLShaderProgram * program);
 
 private:
-    QOpenGLShaderProgram * program_;
     QOpenGLContext * context_;
     Camera * camera_;
 
